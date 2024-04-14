@@ -30,6 +30,10 @@ class CreateMessageP2PSerializer(serializers.Serializer):
     chat_id = serializers.IntegerField()
     message = MessageSerializer()
 
+class CreateMessageGroupSerializer(serializers.Serializer):
+    chat_id = serializers.IntegerField()
+    message = MessageSerializer()
+
 # {
 #     "chat_id":cid,
 #     "message":{

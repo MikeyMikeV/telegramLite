@@ -45,3 +45,20 @@ class CreateMessageP2PViewSet(viewsets.ModelViewSet):
             message = message.save()
         chat.message_history.messages.add(message)
         return response.Response("Message created")
+    
+class CreateMessageGroupViewSet(viewsets.ModelViewSet):
+    parser_classes = [permissions.AllowAny]
+    parser_classes = (parsers.JSONParser,)
+    serializer_class = serializers.CreateMessageGroupSerializer
+
+    def list(self, request):
+        return response.Response('list')
+
+    def create(self, request):
+        chat_id = request.data['chat_id']
+        chat = models.ChatGroup.objects.get(pk = chat_id)
+        message = serializers.MessageSerializer(data=request.data['message'])
+        if message.is_valid():
+            message = message.save()
+        chat.message_history.messages.add(message)
+        return response.Response("Message created")
