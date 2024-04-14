@@ -1,0 +1,5 @@
+/todo
+/.env
+/myvenv
+/chat_app/__pycache__
+/messenger/__pycache__
