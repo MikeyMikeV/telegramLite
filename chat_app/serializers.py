@@ -3,36 +3,53 @@ from . import models
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    # author = serializers.HyperlinkedIdentityField(view_name='MessageViewSet')
     class Meta:
         model = models.Message
-        fields = '__all__'
+        fields = (
+            "url", 
+            "author", 
+            "text", 
+            "image", 
+            "file", 
+            "timestamp", 
+            "edited"
+        )
+
 
 class MessageHistorySerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True)
+
     class Meta:
-        model = models.MessageHitory
+        model = models.MessageHistory
         fields = "__all__"
+
 
 class ChatP2PSerializer(serializers.ModelSerializer):
     message_history = MessageHistorySerializer()
+
     class Meta:
         model = models.ChatP2P
-        fields = '__all__'
+        fields = "__all__"
+
 
 class ChatGroupSerializer(serializers.ModelSerializer):
     message_history = MessageHistorySerializer()
+
     class Meta:
         model = models.ChatGroup
-        fields = '__all__'
+        fields = "__all__"
 
 
 class CreateMessageP2PSerializer(serializers.Serializer):
     chat_id = serializers.IntegerField()
     message = MessageSerializer()
 
+
 class CreateMessageGroupSerializer(serializers.Serializer):
     chat_id = serializers.IntegerField()
     message = MessageSerializer()
+
 
 # {
 #     "chat_id":cid,

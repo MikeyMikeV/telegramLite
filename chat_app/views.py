@@ -12,7 +12,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     # def create(self, )
 
 class MessageHistoryViewSet(viewsets.ModelViewSet):
-    queryset = models.MessageHitory.objects.all()
+    queryset = models.MessageHistory.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = serializers.MessageHistorySerializer
     parser_classes = (parsers.JSONParser,)
