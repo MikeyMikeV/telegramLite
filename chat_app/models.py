@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class MessageHistory(models.Model):
     messages = models.ManyToManyField("Message", related_name='message_history', blank=True)
     pinned_messages = models.ManyToManyField("Message", related_name='pinned_messages', blank=True)
+
 
 class ChatP2P(models.Model):
     message_history = models.ForeignKey(MessageHistory, on_delete=models.CASCADE, related_name='p2p_history')

@@ -1,8 +1,9 @@
 *{
-    background-color: rgba(0, 0, 0, 0.173);
+    /* background-color: rgba(0, 0, 0, 0.173); */
     margin: 0 auto;
     box-sizing: border-box;
-    border: 1px solid black;
+    font-family: Arial, Helvetica, sans-serif;
+    /* border: 1px solid black; */
 }
 body{
     background-color: aquamarine;
@@ -24,9 +25,8 @@ body{
     width: 70%;
 }
 
-.menu-search, .chat-list{
+.menu-search, .chat-list, .chat-info{
     width: 100%;
-    height: 50px;
     flex: 0 1 70px;
 }
 
@@ -35,7 +35,7 @@ body{
 }
 
 .chat-list{
-    height: 100 ;
+    background-color: azure;
     overflow-y: scroll;
     flex: 1 1 auto;
 }
@@ -55,34 +55,164 @@ body{
     height: 100px;
     width: 100%;
     display: flex;
+    border-bottom: 1px solid grey;
 }
 
-.chat-card .chat-icon, .chat-card .chat-info{
+.chat-card .chat-card-icon, .chat-card .chat-card-info{
     border-radius: 40px;
     margin: 9px;
     width: 80px;
     height: 80px;
     flex: 0 1 80px;
 }
-.chat-card .chat-info{
+
+.chat-card .chat-card-icon img{
+    border-radius: 40px;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.chat-card .chat-card-info{
     border-radius: 0px;
     width: auto;
     flex: 1 1 auto;
 }
-.chat-info .chat-name-date, .chat-info .chat-lastmsg-unread{
+.chat-card-info .chat-card-name-date, .chat-card-info .chat-card-lastmsg-unread{
     height: 40px;
     width: 100%;
     display: flex;
 }
 
-.chat-name-date .chat-name, .chat-name-date .lastmgs{
+.chat-card-name-date .chat-card-name, .chat-card-name-date .lastmgs{
     font-size: 30px;
-    flex: 1 1 auto;
+    flex: 1 0 auto;
 }
 
-.chat-name-date .lastmgs{
-    color: gray;
+.chat-card-name-date .lastmgs{
+    color: black;
     width: max-content;
-    font-size: 25px;
+    font-size: 20px;
     text-align: right;
+    margin: 5px;
+}
+
+.chat-info{
+    display: flex;
+}
+
+.chat-info .chat-icon, 
+.chat-info .chat-name, 
+.chat-info .chat-pinned, 
+.chat-info .chat-settings
+{
+    margin: 10px;
+    height: 50px;
+    border: 0px;
+}   
+
+.chat-info .chat-icon{
+    margin: 5px;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+}
+.chat-info .chat-icon .chat-icon-img{
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 30px;
+}
+
+.chat-info .chat-name{
+    flex: 0 1 475px;
+}
+
+.chat-info .chat-pinned{
+    flex: 0 1 300px;
+}
+
+.chat-info .chat-settings{
+    flex: 0 1 150px;
+}
+
+.chat-content{
+    width: 100%;
+    height: 100vh;
+}
+
+.chat-history, .chat-content .chat-input{
+    width: 70%;
+    height: 83vh;
+}
+.chat-content .chat-input{
+    margin-top: 10px;
+    height: 7vh;
+    background-color: white;
+    border-radius: 20px;
+}
+
+.chat-input-box, 
+.chat-emote-input, 
+.chat-attach-input,
+.chat-send-input{
+    height: 50px;
+    margin: 10px;
+    margin-right: 0px;
+    border: white;
+    background-color: white;
+}
+
+.chat-input-box{
+    width: 70%;
+}
+
+.chat-input-box:focus{
+    outline: none;
+}
+
+
+.message-display {
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px gray solid;
+}
+
+.message-side-left{
+    display:inline-block; 
+    border-radius: 10px;
+    background-color: white;
+    padding: 15px;
+    border: 1px gray solid;
+}
+.message-side-right{
+    border-radius: 10px;
+    background-color: lightgreen;
+    padding: 10px;
+    border: 1px gray solid;
+}
+
+.message-icon{
+    display:inline-block; 
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    border: 1px gray solid;
+    margin-bottom: 10px;
+}
+
+.message-name{
+    font-size: 20px;
+}
+
+.message-content{
+    width: fit-content;
+    max-width: 600px;
+    height: fit-content;
+}
+
+.message-text{
+    width: fit-content;
+    height: fit-content;
+    font-size: 20px;
 }

@@ -2,7 +2,6 @@ from django.shortcuts import render
 from rest_framework import viewsets, permissions, parsers, response
 from . import models, serializers
 
-
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = models.Message.objects.all()
     permission_classes = [permissions.AllowAny]
