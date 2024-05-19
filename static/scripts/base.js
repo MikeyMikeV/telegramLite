@@ -66,10 +66,9 @@ async function getChatList() {
 
                 let history = chat_content.querySelector('.chat-history')
                 history = clearElement(history)
-                element.message_history.messages.forEach(chatElement =>{
-                    let elem = document.createElement('div')
-                    elem.className = 'chat-history-elem'
-                    elem.innerHTML = chatElement.text
+                element.message_history.messages.forEach(message =>{
+                    let elem = createMessageDisplay(message)
+                    console.log(elem)
                     history.append(elem)
                 })
             }
@@ -143,7 +142,6 @@ async function getChatList() {
 
                 element.message_history.messages.forEach(message =>{
                     let elem = createMessageDisplay(message)
-                    // let elem = document.createElement('div')
                     console.log(elem)
                     history.append(elem)
                 })

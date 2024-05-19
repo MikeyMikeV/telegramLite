@@ -3,12 +3,12 @@ from . import models
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    # author = serializers.HyperlinkedIdentityField(view_name='MessageViewSet')
+    author = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = models.Message
         fields = (
             "url", 
-            "author", 
+            "author",
             "text", 
             "image", 
             "file", 

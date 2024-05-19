@@ -1,14 +1,16 @@
 *{
-    /* background-color: rgba(0, 0, 0, 0.173); */
+    background-color: rgba(0, 0, 0, 0.173);
     margin: 0 auto;
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
-    /* border: 1px solid black; */
+    border: 1px solid black;
 }
+
 body{
     background-color: aquamarine;
     height: 100vh;
 }
+
 .conteiner{
     width: 80%;
     height: 100%;   
