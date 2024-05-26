@@ -1,7 +1,20 @@
+console.log('check')
+
+let chatLog = document.querySelector(".chat-history")
+let chatMessageInput = document.querySelector(".chat-input-box")
+let chatMessageSend = document.querySelector(".chat-send-input")
+
+let user = null
+
+chatMessageInput.focus()
+
+
 let chat_list = document.querySelector('.chat-list')
 let chat_info = document.querySelector('.chat-info')
 let chat_content = document.querySelector('.chat-content')
 let currentChatName = null
+
+let chatSocket = null
 
 async function getChatList() {
     const responseP2P = await fetch(
@@ -18,7 +31,6 @@ async function getChatList() {
     )
     data = await responseP2P.json()
     data.forEach(element => {
-        console.log(element.message_history.messages[0].text)
         const chat_card = document.createElement('template')
         html = `<div class="chat-card">
             <div class="chat-card-icon">
@@ -39,6 +51,8 @@ async function getChatList() {
         let child = chat_card.content.cloneNode(true).querySelector('div')
 
         child.addEventListener('click', async function(){
+            console.log("p2p",element.id)
+            chatSocket = connect("p2p",element.id)
             selectedChatName = child.querySelector('.chat-card-name').innerHTML
             if (currentChatName != selectedChatName){
                 currentChatName = selectedChatName
@@ -63,7 +77,6 @@ async function getChatList() {
                 icon=clearElement(icon)
                 icon.append(image)
                 name.innerHTML = chatData.group_name
-
                 let history = chat_content.querySelector('.chat-history')
                 history = clearElement(history)
                 element.message_history.messages.forEach(message =>{
@@ -91,6 +104,7 @@ async function getChatList() {
     )
     data = await responseGroup.json()
     data.forEach(element => {
+        console.log(element)
         const chat_card = document.createElement('template')
         html = `<div class="chat-card">
             <div class="chat-card-icon">
@@ -99,10 +113,10 @@ async function getChatList() {
             <div class="chat-card-info">
                 <div class="chat-card-name-date">
                     <span class="chat-card-name">${element.group_name}</span>
-                    <span class="lastmgs">${getLastMessage(element).timestamp.slice(11,16)}</span>
+                    <span class="lastmgs">${getLastMessage(element) ? getLastMessage(element).timestamp.slice(11,16): ''}</span>
                 </div>
                 <div class="chat-lastmsg-unread">
-                    ${getLastMessage(element).text}
+                    ${getLastMessage(element) ? getLastMessage(element).text: ''}
                 </div>
             </div>
         </div>`
@@ -112,6 +126,8 @@ async function getChatList() {
 
 
         child.addEventListener('click', async function(){
+            console.log("group",element.id)
+            chatSocket = connect("group",element.id)
             selectedChatName = child.querySelector('.chat-card-name').innerHTML
             if (currentChatName != selectedChatName){
                 currentChatName = selectedChatName
@@ -193,39 +209,81 @@ function createMessageDisplay(message) {
     return messageDisplay.content.cloneNode(true).querySelector('div')
 }
 
-
+login()
 getChatList()
 
-// function chatCardFromHTML(image_addres, chat_name, last_msg_tmstp, last_msg) {
-//     html = `
-//     <div class="chat-card">
-//         <div class="chat-icon">
-//             <img src="${image_addres}" alt="">
-//         </div>
-//         <div class="chat-info">
-//             <div class="chat-name-date">
-//                 <span class="chat-name">${chat_name}</span>
-//                 <span class="lastmgs">${last_msg_tmstp}</span>
-//             </div>
-//             <div class="chat-lastmsg-unread">
-//                 ${last_msg}
-//             </div>
-//         </div>
-//     </div>
-//     `
-//     // Process the HTML string.
-//     html = html.trim();
-//     if (!html) return null;
 
-//     // Then set up a new template element.
-//     const template = document.createElement('template');
-//     template.innerHTML = html;
-//     const result = template.content.children;
+chatMessageInput.onkeyup = function(e) {
+    if (e.keyCode === 13) {  // enter key
+        chatMessageSend.click();
+    }
+};
 
-//     // Then return either an HTMLElement or HTMLCollection,
-//     // based on whether the input HTML had one or more roots.
-//     if (result.length === 1) return result[0];
-//     return result;
-// }
 
-// console.log(chat_list_data,2)
+chatMessageSend.onclick = function() {
+    if (chatMessageInput.value.length === 0) return;
+    chatSocket.send(JSON.stringify({
+        "type":"message",
+        "message": chatMessageInput.value,
+        "author": user
+    }));
+    chatMessageInput.value = "";
+};
+
+function connect(roomType,roomID) {
+    console.log("ws://" + window.location.host + "/ws/chat/"+ roomType + "/" + roomID + "/")
+    let chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/"+ roomType + "/" + roomID + "/");
+
+    chatSocket.onopen = function(e) {
+        console.log("Successfully connected to the WebSocket.");
+    }
+
+    chatSocket.onclose = function(e) {
+        console.log("WebSocket connection closed unexpectedly. Trying to reconnect in 2s...");
+        setTimeout(function() {
+            console.log("Reconnecting...");
+            connect(roomType,roomID);
+        }, 2000);
+    };
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        let history = chat_content.querySelector('.chat-history')
+        switch (data['type']) {
+            case "chat_message":
+                history.append(createMessageDisplay(data))
+                history.scrollHeight
+                break;
+            default:
+                console.error("Unknown message type!");
+                break;
+        }
+
+        // scroll 'chatLog' to the bottom
+        chatLog.scrollTop = chatLog.scrollHeight;
+    };
+
+    chatSocket.onerror = function(err) {
+        console.log("WebSocket encountered an error: " + err.message);
+        console.log("Closing the socket.");
+        chatSocket.close();
+    }
+    return chatSocket
+}
+
+
+function login() {
+    console.log(1)
+    try{
+        user = window.localStorage.getItem('email')
+        console.log(user)
+        if (user == null){
+            throw user
+        }
+    }catch(error){
+        console.log(error)
+        email = prompt("Введите совой Email:")
+        window.localStorage.setItem('email',email)
+        user = email
+    }
+}

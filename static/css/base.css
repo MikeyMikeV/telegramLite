@@ -143,6 +143,10 @@ body{
     height: 100vh;
 }
 
+.chat-history{
+    overflow-y: scroll;
+}
+
 .chat-history, .chat-content .chat-input{
     width: 70%;
     height: 83vh;
